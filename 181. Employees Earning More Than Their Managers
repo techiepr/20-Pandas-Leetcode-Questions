@@ -4,3 +4,16 @@ def find_employees(employee: pd.DataFrame) -> pd.DataFrame:
     df = pd.merge(employee, employee, how='inner', left_on='managerId', right_on='id', suffixes=('_emp','_manag'))
     df1 = df[df["salary_emp"] > df["salary_manag"]]["name_emp"]
     return pd.DataFrame({"Employee":df1})    
+
+
+
+-----------------X---------------------
+
+
+
+import pandas as pd
+
+def find_employees(employee: pd.DataFrame) -> pd.DataFrame:
+    df = pd.merge(employee, employee, how='inner', left_on='managerId', right_on='id', suffixes=('_emp','_manag'))
+    df1 = df.query("salary_emp > salary_manag")["name_emp"]
+    return pd.DataFrame({"Employee":df1})    
