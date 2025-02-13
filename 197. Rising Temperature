@@ -1,0 +1,5 @@
+import pandas as pd
+
+def rising_temperature(weather: pd.DataFrame) -> pd.DataFrame:
+    df1 = weather.sort_values(by='recordDate', ascending=True)
+    return df1[(df1.temperature.diff() > 0) & (df1.recordDate.diff().dt.days == 1)][['id']].rename(columns={'id':'Id'})
