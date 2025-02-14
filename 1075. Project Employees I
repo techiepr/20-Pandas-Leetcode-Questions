@@ -1,0 +1,6 @@
+import pandas as pd
+
+def project_employees_i(project: pd.DataFrame, employee: pd.DataFrame) -> pd.DataFrame:
+    df = pd.merge(project, employee, how='left',on='employee_id')
+    df['average_years'] = df.groupby('project_id')["experience_years"].transform("mean").round(2)
+    return df[["project_id", "average_years"]].drop_duplicates()   
