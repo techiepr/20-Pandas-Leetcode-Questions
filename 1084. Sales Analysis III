@@ -1,17 +1,14 @@
-with cte as
-(
-select distinct p1.product_id
-from product p1
-join sales s1
-on p1.product_id = s1.product_id
-where sale_date > '2019-03-31'
-or  sale_date < '2019-01-01'
-order by product_id
-)
-select distinct p2.product_id,
-       p2.product_name
-from product p2
-join sales s2
-on p2.product_id = s2.product_id
-where p2.product_id not in (select product_id from cte)
-and s2.sale_date between '2019-01-01' and '2019-03-31'
+import pandas as pd
+
+def sales_analysis(product: pd.DataFrame, sales: pd.DataFrame) -> pd.DataFrame:
+    # Merge product and sales data on product_id
+    df = pd.merge(product, sales, on='product_id', how='inner')
+
+    # Filter products sold outside Q1 2019
+    outside_q1 = df[(df['sale_date'] > '2019-03-31') | (df['sale_date'] < '2019-01-01')]['product_id'].unique()
+
+    # Select products sold only in Q1 2019 (excluding those found in outside_q1)
+    df_q1 = df[~df['product_id'].isin(outside_q1)]
+
+    # Return distinct products with only Q1 sales
+    return product[product['product_id'].isin(df_q1['product_id'])][["product_id", "product_name"]]
